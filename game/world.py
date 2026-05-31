@@ -101,22 +101,29 @@ class World:
     def __init__(self, width, height):
         self.width = width
         self.height = height
+        
+        # Cave location
         self.cave_x = 50
         self.cave_y = 50
         self.cave_width = 300
         self.cave_height = 200
         
-        # Generate world features
+        # Fence around spawn area (in the forest)
+        self.fence_center_x = width // 2
+        self.fence_center_y = height // 2
+        self.fence_radius = 150
+        
+        # Generate world features (outside the fence)
         self.trees = [Tree(random.randint(400, width-100), random.randint(100, height-100)) for _ in range(15)]
         self.animals = [Animal(random.randint(400, width-100), random.randint(100, height-100), 
                               random.choice(["deer", "rabbit", "wolf"])) for _ in range(12)]
         self.chests = [Chest(random.randint(400, width-200), random.randint(150, height-150)) for _ in range(5)]
         
-        # Water
-        self.water_x = width - 200
-        self.water_y = height - 150
-        self.water_width = 150
-        self.water_height = 100
+        # Lake (changed from sea)
+        self.lake_x = width - 200
+        self.lake_y = height - 150
+        self.lake_width = 150
+        self.lake_height = 100
         
         # Hidden button for cave door
         self.button_x = 100
@@ -160,6 +167,10 @@ class World:
         button_color = (0, 255, 0) if self.door_open else (150, 0, 0)
         pygame.draw.rect(screen, button_color, (self.button_x, self.button_y, self.button_width, self.button_height))
         
+        # Draw fence around spawn area
+        pygame.draw.circle(screen, (139, 69, 19), (int(self.fence_center_x), int(self.fence_center_y)), 
+                          int(self.fence_radius), 5)
+        
         # Draw trees
         for tree in self.trees:
             tree.draw(screen)
@@ -168,8 +179,10 @@ class World:
         for chest in self.chests:
             chest.draw(screen)
         
-        # Draw water
-        pygame.draw.rect(screen, (0, 150, 255), (self.water_x, self.water_y, self.water_width, self.water_height))
+        # Draw lake (changed from sea)
+        pygame.draw.rect(screen, (0, 150, 255), (self.lake_x, self.lake_y, self.lake_width, self.lake_height))
+        # Add water wave effect
+        pygame.draw.rect(screen, (100, 200, 255), (self.lake_x + 10, self.lake_y + 10, self.lake_width - 20, self.lake_height - 20))
     
     def draw_animals(self, screen):
         for animal in self.animals:
