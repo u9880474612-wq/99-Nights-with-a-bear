@@ -1,1 +1,1 @@
-# Game package initialization file
+# Game package
